@@ -38,7 +38,7 @@ python -c "import docx"             # 缺 python-docx: pip install python-docx
 
 把各节文件合并为一个总 md，加主标题，节间**不留 `---`**（`---` 在 pandoc 里会变成分节/水平线）：
 
-下面命令里 `$SKILL` 指本 skill 所在目录（即 `.../grant-proposal-writing`），`$WORK` 指申报书工作目录（各节 md 所在处）。脚本用绝对路径调用，不依赖当前所在目录，`cd` 到工作目录只是为了让通配符匹配到分节文件。
+下面命令里 `$SKILL` 指本 skill 所在目录（即 `.../chinese-formal-writing`），`$WORK` 指文稿工作目录（各节 md 所在处）。脚本用绝对路径调用，不依赖当前所在目录，`cd` 到工作目录只是为了让通配符匹配到分节文件。
 
 ```bash
 cd "$WORK"   # 申报书工作目录（各节 md 所在处）
