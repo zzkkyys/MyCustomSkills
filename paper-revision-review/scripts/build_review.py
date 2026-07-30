@@ -17,16 +17,16 @@ review spec 是一个 Python 文件，需定义：
     CHANGES   dict[str,dict] 每个 data-id 对应的条目
 
 安全边界：
-    SECTIONS 按原样嵌入，由本脚本用 HTML 解析器校验结构。
-    TITLE / BRAND / LOC 一律转义为纯文本。
-    INTRO 与条目的 before/after/why 经白名单过滤，只保留无属性的排版标签，
-    因此不会引入脚本、事件处理器或外部资源。
+    SECTIONS 走正面白名单：只允许受限的排版标签与 class/data-id/data-type
+    三个属性，其余标签与属性（含 on*、src、href、style、srcdoc）一律拒绝，
+    因此不存在脚本、事件处理器或外部资源。
+    TITLE / BRAND / LOC / before / after 一律作为纯文本处理（逐字保真）。
+    INTRO 与 why 经富文本白名单过滤，只保留无属性的排版标签。
 """
 import hashlib
 import html
 import importlib.util
 import json
-import os
 import re
 import sys
 from html.parser import HTMLParser
@@ -46,6 +46,15 @@ ALLOWED = {'strong', 'em', 'b', 'i', 'u', 'code', 'small', 'sub', 'sup',
            'tr', 'td', 'th'}
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
         'link', 'meta', 'param', 'source', 'track', 'wbr'}
+
+# SECTIONS 采用正面白名单：只认审阅页真正需要的标签与属性，其余一律拒绝。
+# 这样无需追着 script/svg/iframe/srcdoc/on*/@import 逐个枚举。
+SEC_TAGS = {'section', 'div', 'p', 'h2', 'h3', 'h4', 'span', 'del', 'ins',
+            'br', 'strong', 'em', 'b', 'i', 'u', 'code', 'small', 'sub', 'sup',
+            'ul', 'ol', 'li', 'table', 'thead', 'tbody', 'tr', 'td', 'th'}
+SEC_ATTRS = {'class', 'data-id', 'data-type'}
+# 这三个键在 JS 对象字面量里有特殊语义，不能作为 data-id
+RESERVED_IDS = {'__proto__', 'constructor', 'prototype'}
 
 
 def die(msg):
@@ -96,8 +105,6 @@ def clean(text):
 class ReviewParser(HTMLParser):
     """校验 SECTIONS：标记完整性、嵌套正确性、有无外部资源。"""
 
-    RESOURCE_ATTRS = ('src', 'href', 'srcset', 'poster', 'data', 'action')
-
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack = []
@@ -107,7 +114,23 @@ class ReviewParser(HTMLParser):
         self.chg_depth = 0
 
     def handle_starttag(self, tag, attrs):
-        a = dict(attrs)
+        # 逐个遍历原始 attrs，不转 dict —— dict() 会丢掉重复属性，
+        # 而浏览器取的是第一个、dict 取的是最后一个，可被用来绕过检查。
+        seen_attrs = set()
+        a = {}
+        for raw_name, raw_val in attrs:
+            name = raw_name.lower()
+            if name in seen_attrs:
+                self.errs.append('<%s> 出现重复属性 %s' % (tag, name))
+            seen_attrs.add(name)
+            a.setdefault(name, raw_val or '')
+            if name not in SEC_ATTRS:
+                self.errs.append('<%s> 不允许属性 %s（SECTIONS 只接受 %s）'
+                                 % (tag, name, '/'.join(sorted(SEC_ATTRS))))
+
+        if tag not in SEC_TAGS:
+            self.errs.append('SECTIONS 不允许标签 <%s>（只接受受限的排版标签）' % tag)
+
         classes = set((a.get('class') or '').split())
         is_chg = 'chg' in classes
 
@@ -126,11 +149,6 @@ class ReviewParser(HTMLParser):
 
         if tag in ('del', 'ins') and not self.chg_depth:
             self.errs.append('<%s> 不在 .chg 内（点不开，会变成死标记）' % tag)
-
-        for attr in self.RESOURCE_ATTRS:
-            v = (a.get(attr) or '').strip()
-            if v and not v.startswith(('data:', '#')):
-                self.errs.append('%s 的 %s="%s" 是外部资源，破坏离线可用性' % (tag, attr, v[:40]))
 
         if tag not in VOID:
             self.stack.append((tag, is_chg))
@@ -190,10 +208,16 @@ def validate(sections, changes):
     if not changes:
         errs.append('CHANGES 不能为空')
 
-    bad_keys = [k for k in changes if not (isinstance(k, str) and re.fullmatch(r'[A-Za-z_]\w*', k))]
+    bad_keys = [k for k in changes
+                if not (isinstance(k, str)
+                        and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_-]*', k))]
     if bad_keys:
-        errs.append('data-id 必须是字母或下划线开头的标识符（不能含连字符/空格/中文）：%s'
+        errs.append('data-id 只接受 ASCII 字母、数字、下划线与连字符（首字符不能是数字）：%s'
                     % ', '.join(map(repr, bad_keys[:5])))
+    reserved = [k for k in changes if k in RESERVED_IDS]
+    if reserved:
+        errs.append('data-id 不能使用 %s —— 它们在 JS 对象字面量里有特殊语义'
+                    % ', '.join(map(repr, reserved)))
 
     for k, v in changes.items():
         if not isinstance(v, dict):
@@ -245,15 +269,17 @@ def render(mod, out_path):
         die('输出路径必须以 .html 或 .htm 结尾（否则浏览器按纯文本打开）')
 
     used = validate(mod.SECTIONS, mod.CHANGES)
-    changes = {k: {f: clean(mod.CHANGES[k][f]) if f in ('before', 'after', 'why')
-                   else mod.CHANGES[k][f] for f in REQUIRED} for k in used}
+    # before/after 必须逐字保真（前端已用 esc() 转义），只有 why 走富文本白名单
+    changes = {k: {f: clean(mod.CHANGES[k][f]) if f == 'why' else mod.CHANGES[k][f]
+                   for f in REQUIRED} for k in used}
 
     tpl = TEMPLATE.read_text(encoding='utf-8')
 
     counts = {s: sum(1 for v in changes.values() if v['sev'] == s) for s in SEV}
     srcs = {s: sum(1 for v in changes.values() if v['src'] == s) for s in SRC}
 
-    intro_html = '\n'.join('    <p%s>%s</p>' % (' style="margin-top:.6rem"' if i else '', clean(t))
+    intro_html = '\n'.join('    <div class="intro%s">%s</div>'
+                           % (' spaced' if i else '', clean(t))
                            for i, t in enumerate(getattr(mod, 'INTRO', [])))
 
     head = ('  <div class="doc-head">\n    <h1>%s</h1>\n%s\n'
@@ -279,8 +305,9 @@ def render(mod, out_path):
     for ph in ('@@TITLE@@', '@@BRAND@@', '@@LOC@@', '@@BODY@@', '@@DATA@@', '@@KEY@@'):
         if ph in out:
             die('模板占位符 %s 未被替换' % ph)
-    if out.count('</script>') != 1:
-        die('产物含 %d 处 </script>，脚本会提前闭合' % out.count('</script>'))
+    ends = re.findall(r'(?i)</script\s*>', out)
+    if len(ends) != 1:
+        die('产物含 %d 处脚本结束标签，脚本会提前闭合' % len(ends))
     if not out.startswith('<!DOCTYPE html>') or '<meta charset="utf-8">' not in out:
         die('产物缺 DOCTYPE 或 charset（中文会乱码）')
 

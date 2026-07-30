@@ -139,7 +139,8 @@ body{
   font-family:var(--serif); font-weight:600; font-size:1.6rem; line-height:1.25;
   margin:0 0 .5rem; text-wrap:balance; letter-spacing:-.005em;
 }
-.doc-head p{margin:0; font-size:.83rem; line-height:1.65; color:var(--ink-2); max-width:46em}
+.doc-head p,.doc-head .intro{margin:0; font-size:.83rem; line-height:1.65; color:var(--ink-2); max-width:46em}
+.doc-head .intro.spaced{margin-top:.6rem}
 .stats{display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1.15rem}
 .stat{display:flex; align-items:baseline; gap:.4rem}
 .stat b{font-size:1.3rem; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-.01em}
@@ -280,6 +281,9 @@ section{margin-bottom:2.75rem}
 .quote.none{background:transparent; color:var(--ink-3); border-left:2.5px solid var(--rule); font-style:italic; font-family:var(--sans)}
 .why{font-size:.82rem; line-height:1.85; color:var(--ink-2); margin:0}
 .why em{color:var(--ink); font-style:normal; font-weight:600}
+.why{overflow-x:auto}
+.why table{border-collapse:collapse; width:100%; margin:.6rem 0; font-size:.76rem}
+.why th,.why td{border:1px solid var(--rule); padding:.35rem .45rem; text-align:left}
 
 .done-btn{
   margin-top:1.25rem; width:100%; font:inherit; font-size:.78rem; font-weight:600;
@@ -366,7 +370,7 @@ section{margin-bottom:2.75rem}
 /* ---------- init ---------- */
 const root=document.documentElement, body=document.body;
 const spans=[...document.querySelectorAll('.chg')];
-const order=[]; const byId={};
+const order=[]; const byId=Object.create(null);
 
 spans.forEach(sp=>{
   const id=sp.dataset.id, d=DATA[id];
