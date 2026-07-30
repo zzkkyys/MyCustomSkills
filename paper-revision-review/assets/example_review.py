@@ -46,7 +46,7 @@ Motivated by this, we propose a detector that needs only forward passes.
 '''
 
 # ---------------------------------------------------------------- 条目
-# src: mine | codex | both      （本轮提出 / 第二意见提出 / 双方共识）
+# src: mine | second | both     （本轮提出 / 第二意见提出 / 双方共识）
 # sev: 必改 | 建议 | 润色
 # type: 修改 | 新增 | 删除 | 结构
 # why 支持行内 HTML：<strong> <em> <br> <table>
@@ -69,7 +69,7 @@ CHANGES = {
             '<br><br>补半句话即可闭合，成本几乎为零。',
     ),
     'd3': dict(
-        src='codex', sev='必改', type='删除', cat='overclaim',
+        src='second', sev='必改', type='删除', cat='overclaim',
         loc='main.tex:103',
         before='The method is obviously superior to all prior work effective.',
         after='The method is effective.',
