@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">实验结果柱状图</title>
+  <desc id="desc">四种方法的示例结果，本文方法最高。</desc>
+  <rect width="800" height="520" rx="28" fill="#f8fafc"/>
+  <g stroke="#c7d2e6" stroke-width="2">
+    <path d="M100 80 V420 H740" fill="none" stroke="#52617a" stroke-width="4"/>
+    <path d="M100 340 H740"/><path d="M100 260 H740"/><path d="M100 180 H740"/><path d="M100 100 H740"/>
+  </g>
+  <g font-family="Arial, PingFang SC, sans-serif" text-anchor="middle">
+    <rect x="160" y="250" width="90" height="170" rx="8" fill="#7894c8"/>
+    <rect x="305" y="205" width="90" height="215" rx="8" fill="#4e779d"/>
+    <rect x="450" y="165" width="90" height="255" rx="8" fill="#0c5c4c"/>
+    <rect x="595" y="105" width="90" height="315" rx="8" fill="#8f1023"/>
+    <g fill="#26364f" font-size="22">
+      <text x="205" y="458">方法 A</text><text x="350" y="458">方法 B</text>
+      <text x="495" y="458">方法 C</text><text x="640" y="458">本文方法</text>
+    </g>
+    <g fill="#26364f" font-size="24" font-weight="700">
+      <text x="205" y="235">82</text><text x="350" y="190">87</text>
+      <text x="495" y="150">91</text><text x="640" y="90">96</text>
+    </g>
+  </g>
+</svg>

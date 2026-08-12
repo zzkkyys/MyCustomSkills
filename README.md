@@ -11,6 +11,7 @@ ln -s "$PWD/chinese-formal-writing" ~/.claude/skills/chinese-formal-writing
 ln -s "$PWD/grant-proposal-writing" ~/.claude/skills/grant-proposal-writing
 ln -s "$PWD/postdoc-fund-proposal"  ~/.claude/skills/postdoc-fund-proposal
 ln -s "$PWD/paper-revision-review"  ~/.claude/skills/paper-revision-review
+ln -s "$PWD/marp-ppt-theme"          ~/.claude/skills/marp-ppt-theme
 ```
 
 之后在会话中用 `/grant-proposal-writing` 等触发，或让 Claude 按 `description` 自动匹配。
@@ -32,6 +33,12 @@ ln -s "$PWD/paper-revision-review"  ~/.claude/skills/paper-revision-review
 | Skill | 用途 |
 |---|---|
 | [paper-revision-review](paper-revision-review/) | 把修改建议做成可交互的**离线审阅网页**：改动处内联标记（新增/删除/改写/结构调整），点击在批注栏显示原文／改后／**为什么改**；支持标记与终稿视图切换、按严重程度突出、逐条浏览、勾选已处理。含模板、渲染脚本与结构/类型/离线性校验器（拦标记无条目、标签嵌套错误、脚本注入、外部资源），产物为单文件零依赖 HTML。附**分章审阅清单**（摘要引言/相关工作/理论/方法/实验/结论各自的高频问题）与**第二意见协作流程**（让另一模型独立复审再三方对照，含「核实后再采信」纪律）。渲染器不限语言与学科；内置清单面向计算机与机器学习实验论文，其他学科需替换为本学科标准 |
+
+### 演示文稿
+
+| Skill | 用途 |
+|---|---|
+| [marp-ppt-theme](marp-ppt-theme/) | 使用品牌中性的学术蓝色主题创建、排版、检查并导出 Marp Markdown 演示稿。包含 16:9 starter、完整组件 demo、视觉回归压力测试、离线 SVG、多栏/图文/时间轴/大数字/图片页等布局，以及项目初始化、静态检查和 HTML/PDF/PPTX/PNG 渲染脚本 |
 
 ## 约定
 
