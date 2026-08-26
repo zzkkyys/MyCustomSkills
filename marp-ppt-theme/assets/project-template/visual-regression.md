@@ -12,6 +12,8 @@ math: katex
 
 ## 从数据治理、模型推理到决策验证的统一框架
 
+<img class="cover-illustration" src="assets/cover-illustration.png" alt="抽象研究关系插图">
+
 报告人姓名
 
 2026年8月
@@ -94,12 +96,16 @@ math: katex
 
 # 密集表格压力测试
 
+<div class="table-emphasis">
+
 | 方法 | 准确率 | 召回率 | F1 | 参数量 | 延迟 | 显存 | 适用场景 |
 |---|---:|---:|---:|---:|---:|---:|---|
 | 基线 A | 89.3% | 87.8% | 88.5% | 12M | 18ms | 1.2GB | 轻量部署 |
 | 基线 B | 91.6% | 90.2% | 90.9% | 35M | 31ms | 2.8GB | 通用任务 |
 | 方法 C | 93.1% | 92.4% | 92.7% | 86M | 54ms | 5.1GB | 高精度场景 |
 | 示例方法 | **95.8%** | **94.9%** | **95.3%** | 42M | 36ms | 3.2GB | 精度效率平衡 |
+
+</div>
 
 所有数字均为版式占位数据。
 
@@ -110,7 +116,7 @@ math: katex
 <div class="img-left">
 <div>
 
-![width:430px](assets/architecture.svg)
+![模型架构压力测试图 width:430px](assets/architecture.svg)
 
 </div>
 <div>
@@ -135,7 +141,7 @@ math: katex
 
 <div class="timeline-horizontal">
 <div>
-<span class="year">阶段一</span>
+<span class="year">数据准备</span>
 
 ### 数据治理
 
@@ -143,7 +149,7 @@ math: katex
 
 </div>
 <div>
-<span class="year">阶段二</span>
+<span class="year">模型研发</span>
 
 ### 模型研发
 
@@ -151,7 +157,7 @@ math: katex
 
 </div>
 <div>
-<span class="year">阶段三</span>
+<span class="year">实验验证</span>
 
 ### 实验验证
 
@@ -159,7 +165,7 @@ math: katex
 
 </div>
 <div>
-<span class="year">阶段四</span>
+<span class="year">部署评估</span>
 
 ### 部署评估
 
@@ -207,7 +213,9 @@ math: katex
 
 # 全图页与标题叠层测试
 
-![bg contain](assets/results-chart.svg)
+![bg contain 实验结果压力测试图](assets/results-chart.svg)
+
+<div class="sr-only">实验结果柱状图压力测试：四组示例数值依次上升，用于检查标题、图表与图注是否互相遮挡。</div>
 
 <div class="image-caption">图表说明：所有数字均为版式占位数据，仅用于检验全图布局。</div>
 
@@ -261,3 +269,5 @@ math: katex
 # 感谢聆听
 
 欢迎提问与交流
+
+<div class="thanks-mark">Q&amp;A</div>

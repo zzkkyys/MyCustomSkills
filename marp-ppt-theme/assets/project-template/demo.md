@@ -8,15 +8,17 @@ math: katex
 
 <!-- _class: title -->
 
-# 通用 Blue Theme 功能演示
+# 通用学术演示主题
 
-## 改进版学术演示主题
+## Editorial Blue：理性、编辑感、可信
 
-张三
+<img class="cover-illustration" src="assets/cover-illustration.png" alt="抽象研究关系插图">
 
-2026年4月4日
+报告人姓名
 
-某某大学 · 计算机学院
+报告日期
+
+单位名称 · 部门名称
 
 ---
 
@@ -24,27 +26,12 @@ math: katex
 
 <div class="info-box">本演示中的姓名、机构、方法名称和指标均为版式占位内容，不代表真实研究结论或来源。</div>
 
-**首页结构** (`<!-- _class: title -->`):
+## 首页结构
 
-```markdown
-<!-- _class: title -->
-
-# 主标题
-
-## 副标题（可选）
-
-作者姓名
-
-日期
-
-单位信息
-```
-
-- `# 主标题` → 左对齐显示并允许自然换行
-- `## 副标题` → 作为标题上方的导语显示
-- 第 1 个段落 → 作者姓名
-- 第 2 个段落 → 日期
-- 第 3 个段落 → 单位信息
+- 页面开头添加 `<!-- _class: title -->`
+- `# 主标题` 左对齐显示，并允许自然换行
+- `## 副标题` 作为标题上方的导语显示
+- 后续三个段落依次放置报告人、日期和单位信息
 
 ---
 
@@ -65,8 +52,8 @@ math: katex
 
 ## 文本强调
 
-- **粗体文本** 显示为主色调（深蓝色）
-- *斜体文本* 显示为强调色（红色）
+- **粗体文本** 使用钴蓝强调
+- *斜体文本* 使用同色下划线形成语境强调
 - `行内代码` 有灰色背景
 - <mark>高亮文本</mark> 有黄色背景
 
@@ -97,6 +84,8 @@ math: katex
 
 # 学术三线表
 
+<div class="table-emphasis">
+
 | 方法 | 准确率 | 召回率 | F1 分数 |
 |:-----|-------:|-------:|--------:|
 | 方法 A | 92.3% | 89.1% | 90.7% |
@@ -104,7 +93,9 @@ math: katex
 | 方法 C | 93.1% | 93.8% | 93.4% |
 | **本文方法** | **96.2%** | **95.1%** | **95.6%** |
 
-表格采用现代三线表风格；数值列右对齐，整行加粗时自动突出最佳结果。
+</div>
+
+表格采用现代三线表风格；数值列右对齐，并用 `table-emphasis` 显式突出加粗结果行。
 
 ---
 
@@ -155,18 +146,7 @@ $$
 </div>
 </div>
 
-```html
-<div class="columns-2">
-  <div>
-    ### 标题1
-    内容...
-  </div>
-  <div>
-    ### 标题2
-    内容...
-  </div>
-</div>
-```
+**使用方法**：`<div class="columns-2">` 包裹两个直接子 `<div>`；普通多栏默认使用无卡片的编辑式细线布局。
 
 ---
 
@@ -288,7 +268,7 @@ $$
 
 ---
 
-# 彩色两栏布局 (columns-2-colors)
+# 强调型两栏布局 (columns-2-colors)
 
 <div class="columns-2-colors">
 <div>
@@ -311,12 +291,12 @@ $$
 </div>
 </div>
 
-**使用方法**：`<div class="columns-2-colors">` — 第一列蓝色背景，第二列绿色背景。
+**使用方法**：`<div class="columns-2-colors">`，两栏使用钴蓝与冷灰浅底进行对比。
 适合对比展示（如 Before/After、优点/缺点）。
 
 ---
 
-# 彩色三栏布局 (columns-3-colors)
+# 强调型三栏布局 (columns-3-colors)
 
 <div class="columns-3-colors">
 <div>
@@ -342,7 +322,7 @@ $$
 </div>
 </div>
 
-**使用方法**：`<div class="columns-3-colors">` — 蓝/绿/橙三色渐变背景。
+**使用方法**：`<div class="columns-3-colors">`，三栏使用同一冷色体系的不同明度。
 适合展示流程、阶段或层次结构。
 
 ---
@@ -381,16 +361,24 @@ $$
 
 ## 分类标签
 
+<div class="tag-group">
+
 <span class="tag tag-primary">深度学习</span>
 <span class="tag tag-accent">计算机视觉</span>
 <span class="tag tag-success">已完成</span>
 <span class="tag tag-warning">进行中</span>
 <span class="tag tag-info">待审核</span>
 
+</div>
+
 ## 特殊标签
+
+<div class="tag-group">
 
 <span class="tag tag-aug">数据增强</span>
 <span class="tag tag-loss">损失函数</span>
+
+</div>
 
 **使用方法**：`<span class="tag tag-primary">文本</span>`
 可选：`tag-primary` `tag-accent` `tag-success` `tag-warning` `tag-info`
@@ -424,19 +412,13 @@ class SimpleModel(nn.Module):
 
 **使用方法**：在页面开头添加 `<!-- _class: small-text -->`，正文字体变为 18pt。
 
-## 详细参数说明
-
 | 参数名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
+|:-------|:-----|------:|:-----|
 | learning_rate | float | 0.001 | 学习率，控制参数更新步长 |
 | batch_size | int | 32 | 批次大小，影响内存和收敛 |
 | num_epochs | int | 100 | 训练轮数 |
 | dropout | float | 0.5 | Dropout 比例，防止过拟合 |
 | weight_decay | float | 1e-4 | L2 正则化系数 |
-
-- 学习率过大可能导致震荡，过小则收敛缓慢
-- 批次大小需要根据显存调整
-- Dropout 在测试时需要关闭
 
 ---
 
@@ -512,7 +494,7 @@ class SimpleModel(nn.Module):
 
 <!-- _class: small-text -->
 
-# 快速参考 - 布局组件
+# 快速参考 - 多栏与网格
 
 | 功能 | 用法 |
 |------|------|
@@ -520,15 +502,22 @@ class SimpleModel(nn.Module):
 | 三栏布局 | `<div class="columns-3">` + 3 个 `<div>` |
 | 四栏布局 | `<div class="columns-4">` + 4 个 `<div>` |
 | 2x2 网格 | `<div class="columns-2x2">` + 4 个 `<div>` |
-| 彩色两栏 | `<div class="columns-2-colors">` + 2 个 `<div>` |
-| 彩色三栏 | `<div class="columns-3-colors">` + 3 个 `<div>` |
-| 左图右文 | `<div class="img-left"><div>图</div><div>文</div></div>` |
-| 右图左文 | `<div class="img-right"><div>文</div><div>图</div></div>` |
-| 垂直时间轴 | `<div class="timeline">` + 多个 `<div>` |
-| 水平时间轴 | `<div class="timeline-horizontal">` + 多个 `<div>` |
+| 强调型两栏 | `<div class="columns-2-colors">` + 2 个 `<div>` |
+| 强调型三栏 | `<div class="columns-3-colors">` + 3 个 `<div>` |
+
+---
+
+<!-- _class: small-text -->
+
+# 快速参考 - 图文与叙事组件
+
+| 功能 | 用法 |
+|------|------|
+| 图文混排 | `img-left` 或 `img-right` + 两个 `<div>` |
+| 时间轴 | `timeline` 或 `timeline-horizontal` + 多个 `<div>` |
 | 大数字 | `<div class="big-number">` + `.number` `.unit` `.label` |
-| 强调框 | `<div class="highlight/info-box/warning-box/success-box">` |
-| 标签 | `<span class="tag tag-primary/accent/success">` |
+| 语义提示 | `highlight`、`info-box`、`warning-box`、`success-box` |
+| 标签组 | `tag-group` + 多个 `tag` |
 
 ---
 
@@ -539,12 +528,14 @@ class SimpleModel(nn.Module):
 ```css
 :root {
   /* 主色调 */
-  --color-primary: #001157;   /* 深蓝 */
-  --color-accent: #C00000;    /* 红色 */
+  --color-primary: #2457a7;   /* 钴蓝 */
+  --color-accent: #2457a7;    /* 单一强调色 */
+  --color-text: #1f2933;      /* 墨色 */
+  --color-bg: #f7f8f5;        /* 暖灰纸面 */
 
   /* 字体 */
   --font-heading: "CMU Bright", ...;
-  --font-body: 'Times New Roman', serif;
+  --font-body: "Aptos", "PingFang SC", sans-serif;
 
   /* 尺寸 */
   --font-size-base: 20pt;
@@ -571,7 +562,7 @@ class SimpleModel(nn.Module):
 <div class="img-left">
 <div>
 
-![width:400px](assets/architecture.svg)
+![模型架构示意图 width:400px](assets/architecture.svg)
 
 </div>
 <div>
@@ -611,7 +602,7 @@ class SimpleModel(nn.Module):
 </div>
 <div>
 
-![width:400px](assets/results-chart.svg)
+![实验结果对比图 width:400px](assets/results-chart.svg)
 
 </div>
 </div>
@@ -665,33 +656,33 @@ class SimpleModel(nn.Module):
 
 <div class="timeline-horizontal">
 <div>
-<span class="year">阶段一</span>
+<span class="year">数据准备</span>
 
-### 数据收集
+### 收集与清洗
 
 采集多源数据
 
 </div>
 <div>
-<span class="year">阶段二</span>
+<span class="year">模型训练</span>
 
-### 模型训练
+### 迭代与调优
 
 迭代优化参数
 
 </div>
 <div>
-<span class="year">阶段三</span>
+<span class="year">性能评估</span>
 
-### 评估测试
+### 测试与复核
 
 全面性能验证
 
 </div>
 <div>
-<span class="year">阶段四</span>
+<span class="year">上线部署</span>
 
-### 部署上线
+### 发布与监控
 
 生产环境应用
 
@@ -720,7 +711,7 @@ class SimpleModel(nn.Module):
 </div>
 
 **使用方法**：`.number` 显示大数字，`.unit` 显示单位，`.label` 显示说明
-添加 `.accent` 可变为红色强调
+添加 `.accent` 可使用主题强调色；颜色不变，便于保持统计口径一致
 
 ---
 
@@ -767,7 +758,7 @@ class SimpleModel(nn.Module):
 ```
 
 - `> 引用内容` → 大字体居中显示，带装饰引号
-- 下方段落 → 自动添加破折号，显示为作者
+- 下方段落 → 自动添加短引导线，显示为作者或来源
 
 适合展示名人名言、重要结论或核心观点。
 
@@ -797,8 +788,8 @@ class SimpleModel(nn.Module):
 说明文字（可选）
 ```
 
-- 深蓝色渐变背景
-- 白色大标题 + 红色下划线
+- 与正文一致的暖灰浅色背景
+- 大标题、钴蓝竖向锚点与充足留白
 - 适合在长演示中分隔不同章节
 
 ---
@@ -813,7 +804,7 @@ class SimpleModel(nn.Module):
 
 - 不用手工插入 `<br>` 控制换行
 - 不让标题覆盖副标题或正文
-- 标题仍然保留统一的渐变分隔线
+- 标题保留短钴蓝规则线，不绘制贯穿全页的装饰横线
 
 ---
 
@@ -821,7 +812,9 @@ class SimpleModel(nn.Module):
 
 # Marp 原生全图页
 
-![bg contain](assets/results-chart.svg)
+![bg contain 实验结果对比柱状图](assets/results-chart.svg)
+
+<div class="sr-only">实验结果对比柱状图：方法 A、B、C 与本文方法的示例分数依次提高，本文方法最高。</div>
 
 <div class="image-caption">使用 `![bg contain](...)` 加载图片，并用 `image-caption` 提供可读说明。</div>
 
@@ -859,7 +852,7 @@ class SimpleModel(nn.Module):
 
 ### 右侧
 
-常规卡片仍优先使用 `columns-2`。
+常规并列内容优先使用 `columns-2`。
 
 </div>
 </div>
@@ -906,9 +899,12 @@ class SimpleModel(nn.Module):
 
 欢迎提问与交流
 
+<div class="thanks-mark">Q&amp;A</div>
+
 <!--
 使用方法：
 \<!-- _class: thanks --\>
 # 大标题
 副标题段落
+<div class="thanks-mark">自定义文字</div>
 -->

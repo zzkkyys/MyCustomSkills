@@ -38,7 +38,7 @@ ln -s "$PWD/marp-ppt-theme"          ~/.claude/skills/marp-ppt-theme
 
 | Skill | 用途 |
 |---|---|
-| [marp-ppt-theme](marp-ppt-theme/) | 使用品牌中性的学术蓝色主题创建、排版、检查并导出 Marp Markdown 演示稿。包含 16:9 starter、完整组件 demo、视觉回归压力测试、离线 SVG、多栏/图文/时间轴/大数字/图片页等布局，以及项目初始化、静态检查和 HTML/PDF/PPTX/PNG 渲染脚本 |
+| [marp-ppt-theme](marp-ppt-theme/) | 使用品牌中性的编辑式学术主题创建、排版、检查并导出 Marp Markdown 演示稿。采用暖灰纸面、墨色文字和单一钴蓝强调，提供非对称首页、单路径目录、浅色章节页、无卡片多栏和现代三线表，包含 16:9 starter、完整组件 demo、视觉回归压力测试，以及 HTML/PDF/PPTX/PNG 渲染脚本 |
 
 ## 约定
 

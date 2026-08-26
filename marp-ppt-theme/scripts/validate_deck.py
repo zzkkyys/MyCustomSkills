@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
+from html import unescape
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -16,6 +17,12 @@ LOCAL_IMAGE_RE = re.compile(r"!\[[^\]]*\]\((?!https?://)([^)\s]+)(?:\s+['\"].*?[
 REMOTE_IMAGE_RE = re.compile(r"!\[[^\]]*\]\(https?://", re.IGNORECASE)
 LEGACY_BACKGROUND_RE = re.compile(r"!\[background(?:\s+[^\]]*)?\]\(", re.IGNORECASE)
 NATIVE_BACKGROUND_RE = re.compile(r"!\[bg(?:\s+[^\]]*)?\]\(", re.IGNORECASE)
+FOOTNOTES_RE = re.compile(
+    r'<div\b[^>]*class="[^"]*\bfootnotes\b[^"]*"[^>]*>(.*?)</div>',
+    re.IGNORECASE | re.DOTALL,
+)
+FOOTNOTE_MAX_LINES = 3
+FOOTNOTE_MAX_CHARACTERS = 180
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,6 +61,18 @@ def strip_code_examples(text: str) -> str:
 def split_slides(text: str, frontmatter_match: re.Match[str] | None) -> list[str]:
     body = text[frontmatter_match.end() :] if frontmatter_match else text
     return re.split(r"(?m)^---\s*$", body)
+
+
+def footnote_metrics(fragment: str) -> tuple[int, int]:
+    """Estimate explicit line count and visible length for a footnote block."""
+    text = re.sub(r"<br\s*/?>", "\n", fragment, flags=re.IGNORECASE)
+    text = re.sub(r"</?(?:p|li|ol|ul)\b[^>]*>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
+    text = unescape(text)
+    lines = [re.sub(r"\s+", " ", line).strip() for line in text.splitlines()]
+    lines = [line for line in lines if line]
+    compact = re.sub(r"\s+", " ", " ".join(lines)).strip()
+    return len(lines), len(compact)
 
 
 def main() -> int:
@@ -152,6 +171,13 @@ def main() -> int:
             if "full-image" in classes:
                 warnings.append(
                     f"slide {slide_number}: 'full-image' is a compatibility alias; prefer 'image-slide'"
+                )
+        for footnote in FOOTNOTES_RE.findall(slide):
+            line_count, character_count = footnote_metrics(footnote)
+            if line_count > FOOTNOTE_MAX_LINES or character_count > FOOTNOTE_MAX_CHARACTERS:
+                warnings.append(
+                    f"slide {slide_number}: footnotes may exceed the three-line safe area "
+                    f"({line_count} explicit lines, {character_count} characters); shorten or move content"
                 )
 
     for message in errors:

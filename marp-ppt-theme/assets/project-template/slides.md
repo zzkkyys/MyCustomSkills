@@ -12,9 +12,11 @@ math: katex
 
 ## 一句话说明副标题
 
+<img class="cover-illustration" src="assets/cover-illustration.png" alt="抽象研究关系插图">
+
 报告人
 
-2026年8月
+报告日期
 
 机构或项目名称
 
@@ -65,22 +67,22 @@ math: katex
 
 # 关键结果
 
-<div class="big-number cards">
+<div class="big-number">
 <div>
-<span class="number">96.2<span class="unit">%</span></span>
+<span class="number">XX.X<span class="unit">%</span></span>
 <div class="label">核心指标</div>
 </div>
 <div>
-<span class="number accent">3.5<span class="unit">×</span></span>
+<span class="number accent">X.X<span class="unit">×</span></span>
 <div class="label">效率提升</div>
 </div>
 <div>
-<span class="number">12<span class="unit">项</span></span>
+<span class="number">N<span class="unit">项</span></span>
 <div class="label">验证任务</div>
 </div>
 </div>
 
-> 将示例数字替换为有来源的真实结果。
+> 填入有来源的真实结果；未填写前保留明显占位符。确需显示容器边界时再给 `big-number` 叠加 `cards`。
 
 ---
 
@@ -89,3 +91,5 @@ math: katex
 # 感谢聆听
 
 欢迎提问与交流
+
+<div class="thanks-mark">Q&amp;A</div>

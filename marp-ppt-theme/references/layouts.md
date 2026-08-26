@@ -3,7 +3,7 @@
 ## 目录
 
 - [多栏布局](#多栏布局)
-- [彩色多栏](#彩色多栏)
+- [强调型多栏](#强调型多栏)
 - [图文混排](#图文混排)
 - [时间轴](#时间轴)
 - [大数字](#大数字)
@@ -41,7 +41,9 @@ HTML 容器内部必须保留空行。不要把 Markdown 标题或列表紧贴�
 
 将外层类替换为 `columns-3` 或 `columns-4`，并分别放入三个或四个直接子 `<div>`。使用 `columns-2x2` 时放入四个直接子容器，自动排成两行两列。
 
-## 彩色多栏
+普通多栏默认以留白和顶部细线分组，不绘制卡片边框。确需明确容器边界时，将外层类写成 `class="columns-2 cards"`；卡片是可选强调，不应成为每页默认。
+
+## 强调型多栏
 
 用 `columns-2-colors` 展示两种方案，用 `columns-3-colors` 展示三个阶段。结构与普通多栏相同：
 
@@ -79,7 +81,7 @@ HTML 容器内部必须保留空行。不要把 Markdown 标题或列表紧贴�
 <div class="img-left">
 <div>
 
-![width:400px](assets/architecture.svg)
+![模型架构示意图 width:400px](assets/architecture.svg)
 
 </div>
 <div>
@@ -142,7 +144,7 @@ HTML 容器内部必须保留空行。不要把 Markdown 标题或列表紧贴�
 </div>
 ```
 
-删除 `cards` 可使用无边框版本；给 `.number` 添加 `accent` 可使用红色强调。每页只突出两至四个同口径指标。
+删除 `cards` 可使用无边框版本；给 `.number` 添加 `accent` 可声明语义重点。主题仍保持单一钴蓝，避免用颜色暗示不存在的统计差异。每页只突出两至四个同口径指标。
 
 ## 提示框与标签
 
@@ -155,14 +157,18 @@ HTML 容器内部必须保留空行。不要把 Markdown 标题或列表紧贴�
 ```
 
 ```markdown
+<div class="tag-group">
+
 <span class="tag tag-primary">核心</span>
 <span class="tag tag-accent">重要</span>
 <span class="tag tag-success">完成</span>
 <span class="tag tag-warning">进行中</span>
 <span class="tag tag-info">待核验</span>
+
+</div>
 ```
 
-主题还保留 `tag-aug` 和 `tag-loss` 两个扩展配色，适合机器学习演示中的“数据增强”和“损失函数”。
+主题还保留 `tag-aug` 和 `tag-loss` 两个兼容标签，默认统一使用主题钴蓝。只有完成、进行中、警告等真实状态才使用绿、黄、红等语义色。
 
 ## 全图页
 
@@ -171,19 +177,22 @@ HTML 容器内部必须保留空行。不要把 Markdown 标题或列表紧贴�
 
 # 隐藏标题
 
-![bg contain](assets/figure.png)
+![bg contain 实验结果图](assets/figure.png)
+
+<div class="sr-only">实验结果图的简要文字说明。</div>
 
 <div class="image-caption">图片说明文字</div>
 ```
 
-使用 `<!-- _class: image-slide with-title -->` 显示带深色叠层的页标题。`image-slide` 必须与 Marp 原生背景图片语法配合：保留完整图片用 `bg contain`，接受裁剪以铺满画布时用 `bg cover`。旧类名 `full-image` 只作为兼容别名保留；不要使用无效的 `![background](...)` 语法。
+使用 `<!-- _class: image-slide with-title -->` 显示左上角紧凑标题标签。`image-slide` 必须与 Marp 原生背景图片语法配合：保留完整图片用 `bg contain`，接受裁剪以铺满画布时用 `bg cover`。旧类名 `full-image` 只作为兼容别名保留；不要使用无效的 `![background](...)` 语法。
 
-图片优先使用足够清晰的本地资源，并核对缩放或裁剪效果。说明文字应放在 `image-caption` 中，保持一至两行。
+图片优先使用足够清晰的本地资源，并核对缩放或裁剪效果。普通图片必须填写替代文本；背景图除 Marp 图片描述外，再用 `.sr-only` 提供语义说明。可见说明文字放在 `image-caption` 中，保持一至两行。
 
 ## 补充结构
 
 - 使用 `columns` 创建自由宽度的左右栏，直接子容器分别使用 `left` 和 `right`；叠加 `half` 可等宽。常规两栏优先使用约束更明确的 `columns-2`。
-- 使用 `<div class="footnotes">...</div>` 将少量脚注置于底部安全区。脚注区域最多约三行，超出时会滚动；不要用脚注承载正文论证。
+- 使用 `<div class="table-emphasis">...</div>` 包裹需要突出最佳结果的表格；只有该容器内的粗体行会获得强调底色和引导线。
+- 使用 `<div class="footnotes">...</div>` 将少量脚注置于底部安全区。脚注不滚动隐藏；超过三行或约 180 个字符时校验器会警告，应缩短或移到新页面。
 - 在一级标题的局部数字外包裹 `<span class="num">1</span>`，可单独控制标题数字样式。
 - 给只用于屏幕演示的辅助内容加 `no-print`，打印或导出时隐藏。隐藏前确认它不包含理解结论所必需的信息。
 

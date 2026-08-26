@@ -5,7 +5,7 @@ description: "使用内置的通用 blue.css 学术蓝色主题创建、改写�
 
 # Marp PPT 通用蓝色主题
 
-使用随附模板生成品牌中性的 16:9 学术演示稿。优先使用初始化、校验和渲染脚本，避免遗漏隐藏配置、主题参数或本地资源。
+使用随附模板生成品牌中性的 16:9 编辑式学术演示稿。视觉语言采用暖灰纸面、墨色文字和单一钴蓝强调，以排版、留白和真实图表建立层级。优先使用初始化、校验和渲染脚本，避免遗漏隐藏配置、主题参数或本地资源。
 
 ## 工作流程
 
@@ -19,7 +19,7 @@ description: "使用内置的通用 blue.css 学术蓝色主题创建、改写�
    需要完整组件演示和视觉压力测试稿时增加 `--include-demo`。已有目标文件默认不覆盖；只有用户明确允许覆盖时才使用 `--force`。
 3. 从生成的轻量 starter 写作。先读 `references/quick-reference.md`；需要复杂组件时再读 `references/layouts.md`，不要默认加载全部参考文件。
 4. 按 `references/content-limits.md` 控制每页信息密度。优先删减、拆页或降低栏数，只在参考文献等页面使用小字体。
-5. 运行静态检查：
+5. 运行静态检查。校验器同时检查资源、组件类、长标题和脚注安全容量：
 
    ```bash
    python3 scripts/validate_deck.py <演示稿.md>
@@ -36,11 +36,11 @@ description: "使用内置的通用 blue.css 学术蓝色主题创建、改写�
 ## 内容与版式选择
 
 - 用 `title`、`toc`、`section-divider`、`thanks` 组织整体结构。
-- 用 `columns-2/3/4`、`columns-2x2` 或彩色多栏表达并列、对比与流程。
+- 用默认无卡片的 `columns-2/3/4`、`columns-2x2` 表达并列、对比与流程；只有边界承担分组意义时才叠加 `cards`。
 - 用 `img-left/right` 处理图文混排；图片页使用 `image-slide` 页面类和 Marp 原生 `![bg contain](...)` 语法。
 - 用 `timeline` 或 `timeline-horizontal` 表达时间演进。
 - 用 `big-number` 突出少量同口径指标，用 `quote` 展示有来源的引文或核心判断。
-- 用标准 Markdown 表格和 KaTeX 公式，不使用图片代替可编辑的文字与公式。
+- 用标准 Markdown 表格和 KaTeX 公式，不使用图片代替可编辑的文字与公式；只有需要突出结果行时才用 `table-emphasis` 包裹表格。
 
 ## 关键约束
 
@@ -48,16 +48,19 @@ description: "使用内置的通用 blue.css 学术蓝色主题创建、改写�
 - 普通内容页标题默认预留两行；需要三行标题时增加 `long-title`，并优先考虑缩短标题。
 - 在 HTML 容器的开始标签之后和闭合标签之前保留空行，使内部 Markdown 正确解析。
 - 使用相对于演示稿文件的本地资源路径；离线交付时不要依赖远程占位图片。
+- 普通图片填写有意义的替代文本；背景全图页增加 `.sr-only` 文字说明。
+- 首页可使用 `.cover-illustration` 图片作为右上视觉锚点；优先选择透明背景、无文字、与主题同色的轻量插图，不使用像占位框一样的无语义矩形。
 - 只对可信 Markdown 启用完整 HTML；只有需要读取可信本地资源时才启用本地文件访问。
 - 不自动安装 Marp CLI，不擅自覆盖用户现有文件或 VS Code 配置。
 - 不虚构数字、引文、机构、作者或来源；模板中的示例数据必须替换或删除。
+- 致谢页右栏使用可编辑的 `.thanks-mark` 实体内容；脚注保持三行以内，不依赖滚动隐藏。
 
 ## 资源路由
 
 - `assets/project-template/slides.md`：六页轻量 starter。
 - `assets/project-template/demo.md`：完整组件演示，按需查看或通过 `--include-demo` 复制。
 - `assets/project-template/visual-regression.md`：长标题、高密度组件、图片页和脚注的渲染压力测试稿。
-- `assets/project-template/themes/blue.css`：品牌中性的通用主题。
+- `assets/project-template/themes/blue.css`：品牌中性的编辑式学术主题。
 - `references/quick-reference.md`：常用页面、布局选择和制作检查；每次优先读取。
 - `references/layouts.md`：全部组件语法；使用复杂布局时读取。
 - `references/content-limits.md`：页面容量和写作约束；内容较多时读取。
