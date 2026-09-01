@@ -35,6 +35,14 @@ ORAL = ['需要说明','需要指出','需要特别指出','值得强调','值�
 DEGREE = ['显著','较大','高度','实质性','核心突破','大幅','极大','充分','丰富','坚实']
 REPORT = ['陆续','稳步推进','扎实','初步显现','可落地','稳妥','妥善','稳健','切实']
 JARGON = ['赋能','抓手','闭环','打法','破圈','底座','链路','组合拳','护城河']
+# 绝对化与全称判断（清单第 13 条）：有合理例外或证据只到趋势时必须降级
+ABSOLUTE = ['不再','都会','始终','只能','无法','无从','必然','完全','均不能','均优于','全面领先','所有条件下']
+# 把未做的研究写成做完了（见 references/分寸与证据.md）
+PREMATURE = ['已经证明','本身已能','必然影响','确保','始终保持','跑通','可直接用于','填补空白','首次提出','尚不多见','自成体系']
+# 机械段尾总结（清单第 19 条）
+TAIL = ['仍有值得开展的工作','由此形成','分别对应下文','前一方向对应','后一方向对应','综上所述']
+# 行政公文词与空泛动词（清单第 21 条）：学术文稿里只增加距离感，不增加信息
+ADMIN = ['予以','下设','加以控制','建成','实施方法','开展工作','给出途径','形成定义']
 
 
 def load(paths):
@@ -212,6 +220,41 @@ def words(docs):
         print(f'  {name}：' + ('、'.join(f'{k}×{v}' for k, v in c.most_common()) if c else '无'))
 
 
+def calibration(docs):
+    sec('⑦ 分寸：绝对化、预设结论、机械段尾')
+    for name, lst, tip in (
+            ('绝对化与全称', ABSOLUTE, '问有无合理例外；证据只到趋势就降级为“可能/通常/相对”'),
+            ('预设结论', PREMATURE, '研究尚未做完，改为“检验是否/提供基础/初步验证”'),
+            ('机械段尾', TAIL, '整句删掉看逻辑是否受损，不受损即为废话'),
+            ('行政词与空泛动词', ADMIN, '换成能说清动什么的具体动词：整理/构建/估计/检验/评测/界定')):
+        hits = []
+        for f, tx in docs:
+            body = strip_marks(tx)
+            for w in lst:
+                n = body.count(w)
+                if n:
+                    hits.append(f'{w}×{n}({os.path.basename(f).split("-")[0]})')
+        print(f'  {name}：' + ('、'.join(hits) if hits else '无'))
+        if hits:
+            print(f'     → {tip}')
+
+
+def layout(docs):
+    sec('⑧ 体例细节')
+    for f, tx in docs:
+        b = os.path.basename(f)
+        blank = len(re.findall(r'\*\*\s*\*\*', tx))
+        split_paren = len(re.findall(r'\*\*[（(]\*\*', tx))
+        post_num = [x for x in re.findall(rf'[{CJK}]{{2,}}(?:\d+)[个套项种类]', strip_marks(tx))]
+        if blank or split_paren or post_num:
+            msg = []
+            if blank: msg.append(f'空白加粗 {blank}')
+            if split_paren: msg.append(f'加粗被括号拆开 {split_paren}')
+            if post_num: msg.append('数量词后置 ' + '、'.join(post_num[:5]))
+            print(f'  {b}: ' + '；'.join(msg))
+    print('  → 数量词正文宜前置（“1个评测子集”）；表格内、以及“论文N篇”这类惯用计量可保留。（无输出即通过）')
+
+
 def main():
     args = sys.argv[1:]
     roots = list(ROOTS)
@@ -231,7 +274,8 @@ def main():
     print(f'审计 {len(docs)} 个文件：' + '、'.join(os.path.basename(f) for f, _ in docs))
     drift(docs, roots); repeats(docs); citations(docs)
     figures(docs); style(docs); words(docs)
-    print('\n以上均为机械可查项。判断类问题见 references/可读性核对清单.md。')
+    calibration(docs); layout(docs)
+    print('\n以上均为机械可查项。判断类问题见 references/可读性核对清单.md 与 references/分寸与证据.md。')
 
 
 if __name__ == '__main__':
